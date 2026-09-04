@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +20,6 @@ Route::get('/', function () {
 /* Routes statiques */
 /* Retourne une chaine à partir d'une route, affiché sur une page html */
 
-
 Route::get('/hello', function () {
 
     return 'hello';
@@ -34,17 +34,34 @@ Route::get('/app_json', function () {
 /* Routes dynamique */
 // Lien avec paramètre
 
-Route::get('/hello/name', function ()  {
-    
-return 'hello name';
+Route::get('/hello/name', function () {
+
+    return 'hello name';
 });
-Route::get('/hello/{name}', function (string $name)  {
-    
-return 'hello '. $name;
+Route::get('/hello/{name}', function (string $name) {
+
+    return 'hello '.$name;
 });
 
 Route::get('blog/{slug}-{id}', function (string $slug, int $id) {
-   return [
-    'slug'=>$slug,
-    'id'=> $id]; 
-})->where(['id'=>'[0-9]+', 'slug'=>'[a-zA-Z0-9]+']);
+    return [
+        'slug' => $slug,
+        'id' => $id];
+})->where(['id' => '[0-9]+', 'slug' => '[a-zA-Z0-9]+']);
+
+// rérer les valeurs des paraètres dans une route
+Route::get('/data2', function () {
+
+    return $_GET;
+});
+
+// Autre manière plus propre
+
+Route::get('/data', function (Request $request) {
+
+    return [
+        //Récupération paramètre spécifique
+        'name' => $request->input('name', 'Jean'),
+        // Récupération de tous le paramètre   
+        'all' => $request->all()];
+});
