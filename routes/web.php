@@ -47,4 +47,4 @@ Route::get('blog/{slug}-{id}', function (string $slug, int $id) {
    return [
     'slug'=>$slug,
     'id'=> $id]; 
-})->where(['id'=>'[0-9]+', 'slug'=>'[a-z]+']);
+})->where(['id'=>'[0-9]+', 'slug'=>'[a-zA-Z0-9]+']);
