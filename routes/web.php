@@ -16,14 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 /* Routes statiques */
 /* Retourne une chaine à partir d'une route, affiché sur une page html */
 
 Route::get('/hello', function () {
 
     return 'hello';
-});
+})->name('hello');
 /* Retourne des données json */
 Route::get('/app_json', function () {
 
@@ -47,9 +47,9 @@ Route::get('blog/{slug}-{id}', function (string $slug, int $id) {
     return [
         'slug' => $slug,
         'id' => $id];
-})->where(['id' => '[0-9]+', 'slug' => '[a-zA-Z0-9]+']);
+})->where(['id' => '[0-9]+', 'slug' => '[a-zA-Z0-9]+'])->name('blog.show');
 
-// rérer les valeurs des paraètres dans une route
+// g érer les valeurs des paramètres dans une route
 Route::get('/data2', function () {
 
     return $_GET;
@@ -64,4 +64,20 @@ Route::get('/data', function (Request $request) {
         'name' => $request->input('name', 'Jean'),
         // Récupération de tous le paramètre   
         'all' => $request->all()];
-});
+})->name('data');
+
+Route::get('/new', function ()  {
+    /* return [
+        'welcome'=>route('welcome'),
+        'hello'=>route('hello'),
+    ]; */
+    return redirect()->route('welcome');
+})->name('new');
+
+Route::get('/new2', function ()  {
+    /* return [
+        'welcome'=>route('welcome'),
+        'hello'=>route('hello'),
+    ]; */
+    return to_route('blog.show', ['slug' => 'new-article','id' => 96]);
+})->name('new2');
