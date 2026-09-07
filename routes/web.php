@@ -20,10 +20,36 @@ Route::get('/', function () {
 /* Routes statiques */
 /* Retourne une chaine à partir d'une route, affiché sur une page html */
 
-Route::get('/hello', function () {
+Route::prefix('blog')->name('blog.')->group(function () {
+    Route::get('/hello', function () {
 
-    return 'hello';
-})->name('hello');
+        return 'hello';
+    })->name('hello');
+
+    Route::get('/show/{slug}-{id}', function (string $slug, int $id) {
+        return [
+            'slug' => $slug,
+            'id' => $id];
+    })->where(['id' => '[0-9]+', 'slug' => '[a-zA-Z0-9-]+'])->name('show');
+
+    Route::get('/new', function () {
+        /* return [
+            'welcome'=>route('welcome'),
+            'hello'=>route('hello'),
+        ]; */
+        return redirect()->route('welcome');
+    })->name('new');
+
+    Route::get('/new2', function () {
+        /* return [
+            'welcome'=>route('welcome'),
+            'hello'=>route('hello'),
+        ]; */
+        return to_route('show', ['id' => 96, 'slug' => 'new-article']);
+    })->name('new2');
+
+});
+
 /* Retourne des données json */
 Route::get('/app_json', function () {
 
@@ -43,12 +69,6 @@ Route::get('/hello/{name}', function (string $name) {
     return 'hello '.$name;
 });
 
-Route::get('blog/{slug}-{id}', function (string $slug, int $id) {
-    return [
-        'slug' => $slug,
-        'id' => $id];
-})->where(['id' => '[0-9]+', 'slug' => '[a-zA-Z0-9]+'])->name('blog.show');
-
 // g érer les valeurs des paramètres dans une route
 Route::get('/data2', function () {
 
@@ -60,24 +80,8 @@ Route::get('/data2', function () {
 Route::get('/data', function (Request $request) {
 
     return [
-        //Récupération paramètre spécifique
+        // Récupération paramètre spécifique
         'name' => $request->input('name', 'Jean'),
-        // Récupération de tous le paramètre   
+        // Récupération de tous le paramètre
         'all' => $request->all()];
 })->name('data');
-
-Route::get('/new', function ()  {
-    /* return [
-        'welcome'=>route('welcome'),
-        'hello'=>route('hello'),
-    ]; */
-    return redirect()->route('welcome');
-})->name('new');
-
-Route::get('/new2', function ()  {
-    /* return [
-        'welcome'=>route('welcome'),
-        'hello'=>route('hello'),
-    ]; */
-    return to_route('blog.show', ['slug' => 'new-article','id' => 96]);
-})->name('new2');
