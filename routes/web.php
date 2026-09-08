@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,39 +15,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+Route::get('/', [PostController::class,'welcome'])->name('welcome');
 /* Routes statiques */
 /* Retourne une chaine à partir d'une route, affiché sur une page html */
 
 Route::prefix('blog')->name('blog.')->group(function () {
-    Route::get('/hello', function () {
+    Route::get('/hello',[PostController::class, 'hello'] )->name('hello');
 
-        return 'hello';
-    })->name('hello');
+    Route::get('/show/{slug}-{id}',[PostController::class,'show'] )->where(['id' => '[0-9]+', 'slug' => '[a-zA-Z0-9-]+'])->name('show');
 
-    Route::get('/show/{slug}-{id}', function (string $slug, int $id) {
-        return [
-            'slug' => $slug,
-            'id' => $id];
-    })->where(['id' => '[0-9]+', 'slug' => '[a-zA-Z0-9-]+'])->name('show');
+    Route::get('/new', [PostController::class,'welcome'])->name('new');
 
-    Route::get('/new', function () {
-        /* return [
-            'welcome'=>route('welcome'),
-            'hello'=>route('hello'),
-        ]; */
-        return redirect()->route('welcome');
-    })->name('new');
-
-    Route::get('/new2', function () {
-        /* return [
-            'welcome'=>route('welcome'),
-            'hello'=>route('hello'),
-        ]; */
-        return to_route('show', ['id' => 96, 'slug' => 'new-article']);
-    })->name('new2');
+    Route::get('/new2',[PostController::class,'new2' ])->name('new2');
 
 });
 
